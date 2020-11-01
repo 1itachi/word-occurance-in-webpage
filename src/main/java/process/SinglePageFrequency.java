@@ -7,18 +7,35 @@ import java.util.PriorityQueue;
 import exception.WebsiteNotReachableException;
 import scraper.Scraper;
 
+/**
+ * Class represents Single page frequency. Provided a url and list of words, calculates the number
+ * of occurrence of the words in the page.
+ */
 public class SinglePageFrequency {
 
   private String url;
   private HashMap<String, Integer>wordMap;
   private Integer limit;
 
-  public SinglePageFrequency(String url, HashMap<String, Integer> wordMap, int K){
+  /**
+   * Constructor for single page frequency.
+   * @param url page url to scrape and search words.
+   * @param wordMap a map of words and number of occurrences.
+   * @param K to print top K occurrences words.
+   * @throws WebsiteNotReachableException exception if website is not reachable.
+   */
+  public SinglePageFrequency(String url, HashMap<String, Integer> wordMap, int K) throws
+        WebsiteNotReachableException {
     this.url = url;
     this.wordMap = new HashMap<>(wordMap);
     this.limit = K;
+    findFrequencies();
   }
 
+  /**
+   * local method to scrape the page and count the occurrences of the word.
+   * @throws WebsiteNotReachableException exception if website is not reachable.
+   */
   private void findFrequencies() throws WebsiteNotReachableException {
     Scraper scraper = new Scraper();
     //Scrape web page, trim the leading or trailing spaces, convert to lowercase
@@ -33,47 +50,44 @@ public class SinglePageFrequency {
     }
   }
 
+  /**
+   * Print the top K words in the given format
+   * Example:
+   *      https://www.example1.com
+   *      cat - 12
+   *      dog - 9
+   *      bear - 7
+   * @throws WebsiteNotReachableException exception thrown if the url is not accessible
+   */
   public void printTopKWords() throws WebsiteNotReachableException {
-    findFrequencies();
-//    PriorityQueue<Map.Entry<String, Integer>> maxHeap =
-//        new PriorityQueue<>((o1, o2) -> {
-//          if (o1.getValue().equals(o2.getValue())) {
-//            return o1.getKey().compareTo(o2.getKey());
-//          } else {
-//            return o2.getValue().compareTo(o1.getValue());
-//          }
-//        });
 
-//    for (Map.Entry<String, Integer> entry : wordMap.entrySet()) {
-//      maxHeap.add(entry);
-//    }
+    ArrayList<Word>wordList = new ArrayList<>();
 
-    ArrayList<Word>listOfWords = new ArrayList<>();
-
+    //Create a word object with key and value of a Hashmap and add it to a list
     for (Map.Entry<String, Integer> entry : wordMap.entrySet()) {
-        listOfWords.add(new Word(entry.getKey(), entry.getValue()));
+      wordList.add(new Word(entry.getKey(), entry.getValue()));
     }
 
-    OrderList order = new OrderList(listOfWords);
+    //Create OrderList object
+    OrderList order = new OrderList(wordList);
+    //Function to get ordered values in the form of priority queue based on occurrence
     PriorityQueue<Word>maxHeap = order.getOrderedWordsBasedOnOccurrence();
 
     int counter = this.limit;
     System.out.println(this.url);
-//    while(maxHeap.size()!=0 && counter>0){
-//      Map.Entry<String, Integer> entry = maxHeap.poll();
-//      System.out.println(entry.getKey() + " - "+entry.getValue());
-//      counter--;
-//    }
 
-      while(maxHeap.size()!=0 && counter>0){
+    //Loop and print the results
+    while(maxHeap.size()!=0 && counter>0){
         Word word = maxHeap.poll();
-        System.out.println(word.getName() + " - "+word.getOccurance());
+        System.out.println(word.getName() + " - "+word.getOccurrence());
         counter--;
-      }
-
-
+    }
   }
 
+  /**
+   * Get mapping of the single page results.
+   * @return HashMap with key as word name and value as number of occurrence.
+   */
   public HashMap<String, Integer> getMapping(){
     return this.wordMap;
   }

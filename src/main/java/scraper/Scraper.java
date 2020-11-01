@@ -6,13 +6,13 @@ import org.jsoup.nodes.Document;
 import exception.WebsiteNotReachableException;
 
 /**
- * Class provides method to scrape web page
+ * Class provides method to scrape web page.
  */
 public class Scraper {
   /**
    * This method scrapes the web page of the given url and returns the response as string.
-   * @return Scraped results as a string
-   * @throws WebsiteNotReachableException
+   * @return Scraped results as a string.
+   * @throws WebsiteNotReachableException exception if the website is not accessible.
    */
   public String scrapeWebPage(String url) throws WebsiteNotReachableException {
     Document doc = null;

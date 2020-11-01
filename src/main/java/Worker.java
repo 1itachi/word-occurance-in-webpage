@@ -6,6 +6,10 @@ import exception.WebsiteNotReachableException;
 import process.CalculateOverallFrequency;
 import process.SinglePageFrequency;
 
+/**
+ * Class for running and displaying both single page and overall results.
+ * topKWords -> number of top words to be printed for each page
+ */
 public class Worker {
 
   private  int topKWords = 3;
@@ -13,11 +17,19 @@ public class Worker {
   private  String headingForOverallResults = "Output #2\n" + "=========";
   ArrayList<SinglePageFrequency>arrayOfSinglePageResults;
 
+  /**
+   * Constructor for worker. Initializes the array to collect single page results.
+   */
   public Worker(){
     arrayOfSinglePageResults = new ArrayList<>();
   }
 
-
+  /**
+   * Method to print single page results and overall results in the give format.
+   * @param urls set of urls
+   * @param words set of words
+   * @throws WebsiteNotReachableException exception thrown if the website is not reachable.
+   */
   public void run(Set<String> urls, Set<String>words) throws WebsiteNotReachableException {
 
     System.out.println(headingForSinglePageResults);
@@ -32,19 +44,20 @@ public class Worker {
     //loop through all words, print single page result and collect the objects into a list.
     for(String url:urls){
       SinglePageFrequency sf= new SinglePageFrequency(url, wordMap, topKWords );
-      sf.printTopKWords();
+      try {
+        //print single page results
+        sf.printTopKWords();
+      }catch (WebsiteNotReachableException e){
+        System.out.println("Website not reachable!!");
+      }
       arrayOfSinglePageResults.add(sf);
     }
 
     System.out.println("=====================================================================");
     System.out.println(headingForOverallResults);
 
+    //print overall results
     CalculateOverallFrequency cf = new CalculateOverallFrequency(arrayOfSinglePageResults, words);
     cf.printOccurrencesOfWordsAcrossAllUrls();
-
-
   }
-
-
-
 }

@@ -7,13 +7,21 @@ import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
 
-import exception.WebsiteNotReachableException;
-
+/**
+ * Class represents Calculate overall frequency. Provided a list of single page results and set
+ * of words, calculates the total occurrences of the words across all urls.
+ */
 public class CalculateOverallFrequency {
 
   private List<SinglePageFrequency>pageResults;
   private HashMap<String,Integer>mapFinalResults;
 
+  /**
+   * Constructor for calculate overall frequency. Maps set of words to hashmap with initial value as
+   * 0.
+   * @param pageResults List of single page results.
+   * @param words words to be searched.
+   */
   public CalculateOverallFrequency(List<SinglePageFrequency> pageResults, Set<String>words){
       this.pageResults = pageResults;
       mapFinalResults = new HashMap<>();
@@ -22,32 +30,21 @@ public class CalculateOverallFrequency {
       }
   }
 
+  /**
+   * Method to print all the occurrences of words across all urls.
+   */
   public void printOccurrencesOfWordsAcrossAllUrls() {
 
+    //Merge all Hashmaps of single page results to single Hashmap.
     for(SinglePageFrequency sp: pageResults){
-
       HashMap<String, Integer>spMap = sp.getMapping();
-
       spMap.forEach((key, value) -> mapFinalResults.merge(key,value,
           (value1, value2)-> value1+value2));
-
     }
-
-//    PriorityQueue<Map.Entry<String, Integer>> maxHeap =
-//        new PriorityQueue<>((o1, o2) -> {
-//          if (o1.getValue().equals(o2.getValue())) {
-//            return o1.getKey().compareTo(o2.getKey());
-//          } else {
-//            return o2.getValue().compareTo(o1.getValue());
-//          }
-//        });
 
     ArrayList<Word> listOfWords = new ArrayList<>();
 
-//    for (Map.Entry<String, Integer> entry : mapFinalResults.entrySet()) {
-//      maxHeap.add(entry);
-//    }
-
+    //create a list of word
     for (Map.Entry<String, Integer> entry : mapFinalResults.entrySet()) {
       listOfWords.add(new Word(entry.getKey(), entry.getValue()));
     }
@@ -55,14 +52,10 @@ public class CalculateOverallFrequency {
     OrderList order = new OrderList(listOfWords);
     PriorityQueue<Word>maxHeap = order.getOrderedWordsBasedOnOccurrence();
 
-//    while(maxHeap.size()!=0){
-//      Map.Entry<String,Integer> entry = maxHeap.poll();
-//      System.out.println(entry.getKey() + " - " + entry.getValue());
-//    }
-
+    //print results in descending order of occurrences
     while(maxHeap.size()!=0){
       Word word = maxHeap.poll();
-      System.out.println(word.getName() + " - " + word.getOccurance());
+      System.out.println(word.getName() + " - " + word.getOccurrence());
     }
 
   }
