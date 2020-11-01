@@ -1,0 +1,5 @@
+process\CalculateOverallFrequency.class
+Main.class
+process\SinglePageFrequency.class
+exception\WebsiteNotReachableException.class
+scraper\Scraper.class
