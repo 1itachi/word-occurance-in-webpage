@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
 
+import exception.InvalidUrlException;
 import exception.WebsiteNotReachableException;
 import scraper.Scraper;
 
@@ -25,7 +26,7 @@ public class SinglePageFrequency {
    * @throws WebsiteNotReachableException exception if website is not reachable.
    */
   public SinglePageFrequency(String url, HashMap<String, Integer> wordMap, int K) throws
-        WebsiteNotReachableException {
+        WebsiteNotReachableException, InvalidUrlException{
     this.url = url;
     this.wordMap = new HashMap<>(wordMap);
     this.limit = K;
@@ -36,7 +37,7 @@ public class SinglePageFrequency {
    * local method to scrape the page and count the occurrences of the word.
    * @throws WebsiteNotReachableException exception if website is not reachable.
    */
-  private void findFrequencies() throws WebsiteNotReachableException {
+  private void findFrequencies() throws WebsiteNotReachableException, InvalidUrlException {
     Scraper scraper = new Scraper();
     //Scrape web page, trim the leading or trailing spaces, convert to lowercase
     String pageContent = scraper.scrapeWebPage(url).trim().toLowerCase();
@@ -74,7 +75,6 @@ public class SinglePageFrequency {
     PriorityQueue<Word>maxHeap = order.getOrderedWordsBasedOnOccurrence();
 
     int counter = this.limit;
-    System.out.println(this.url);
 
     //Loop and print the results
     while(maxHeap.size()!=0 && counter>0){

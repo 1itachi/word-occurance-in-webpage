@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
+import exception.InvalidUrlException;
 import exception.WebsiteNotReachableException;
 import process.CalculateOverallFrequency;
 import process.SinglePageFrequency;
@@ -43,14 +44,17 @@ public class Worker {
 
     //loop through all words, print single page result and collect the objects into a list.
     for(String url:urls){
-      SinglePageFrequency sf= new SinglePageFrequency(url, wordMap, topKWords );
+      System.out.println(url);
       try {
         //print single page results
+        SinglePageFrequency sf= new SinglePageFrequency(url, wordMap, topKWords );
         sf.printTopKWords();
+        arrayOfSinglePageResults.add(sf);
       }catch (WebsiteNotReachableException e){
         System.out.println("Website not reachable!!");
+      } catch (InvalidUrlException e){
+        System.out.println("Invalid url!!");
       }
-      arrayOfSinglePageResults.add(sf);
     }
 
     System.out.println("=====================================================================");
